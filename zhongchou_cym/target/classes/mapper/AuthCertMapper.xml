@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qf.authcert.mapper.AuthCertMapper">
+    <insert id="insertAuthCert" parameterType="authCert">
+        insert into AUTHCERT(certid,userid,certtype,realname,idcard,idcardphoto,phone,state)
+        values (SEQ_PK_AUTHCERT.NEXTVAL,#{userId},#{certType},#{realName},#{idCard},#{idCardPhoto},#{phone},'DISABLE')
+    </insert>
+
+    <select id="queryAuthCert" parameterType="String" resultType="authCert">
+        select certid,userid,certtype,realname,idcard,idcardphoto,phone,state from AUTHCERT
+        <where>
+            <if test="name != null and name !=''">
+
+                type like '%${name}%'
+            </if>
+        </where>
+        order by certid
+    </select>
+
+    <update id="updateAuthCert" parameterType="authCert">
+        update AUTHCERT
+        <set>
+            <if test="state != null and state != ''">
+                state = #{state}
+            </if>
+
+        </set>
+        where certid=#{certId}
+    </update>
+
+    <select id="queryAuthCertByUserId" parameterType="int" resultType="authCert">
+        select certid,userid,certtype,realname,idcard,idcardphoto,phone,state from AUTHCERT
+        where userid = #{userid}
+    </select>
+</mapper>

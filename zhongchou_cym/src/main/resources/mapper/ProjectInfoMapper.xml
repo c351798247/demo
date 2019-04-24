@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qf.projectinfo.mapper.ProjectInfoMapper">
+    <insert id="insertProjectInfo" parameterType="projectInfo">
+        INSERT INTO PROJECTINFO(PROJECTID,PROJECTTYPE, PROJECTNAME, PROJECTBRIEF, TOTALMONEY, TOTALDAY, HEADPHOTO,
+        DETAILPHOTO, SELFBRIEF, SELFDETAIL, SELFTEL, SERVICETEL, SETUPDATE, STATE,USERID,CURRENTMONEY)
+        VALUES
+        (SEQ_PK_PROJECTINFO.NEXTVAL,#{projectType},#{projectName},#{projectBrief},#{totalMoney},#{totalDay},#{headPhoto},#{detailPhoto},#{selfBrief},#{selfDetail},#{selfTel},#{serviceTel},#{setupDate},'DISABLE',#{userId},0)
+    </insert>
+
+    <select id="queryProjectInfo" parameterType="projectInfo" resultType="projectInfo">
+        select PROJECTID,PROJECTTYPE, PROJECTNAME, PROJECTBRIEF, TOTALMONEY, TOTALDAY, HEADPHOTO, DETAILPHOTO,
+        SELFBRIEF, SELFDETAIL, SELFTEL, SERVICETEL, SETUPDATE, STATE,USERID,CURRENTMONEY FROM PROJECTINFO
+        <where>
+            <if test="projectName != null and projectName != ''">
+                PROJECTNAME LIKE '%${projectName}%'
+            </if>
+            <if test="userId != 0">
+                AND USERID = #{userId}
+            </if>
+        </where>
+        ORDER BY PROJECTID
+    </select>
+
+    <update id="updateProjectInfo" parameterType="projectInfo">
+        UPDATE PROJECTINFO
+        <set>
+            <if test="state != null and state != ''">
+                state = #{state}
+            </if>
+            <if test="currentMoney != 0">
+                ,CURRENTMONEY= #{currentMoney}
+            </if>
+            <if test="setupDate != null">
+                ,SETUPDATE = #{setupDate}
+            </if>
+        </set>
+        where PROJECTID = #{projectId}
+    </update>
+
+    <select id="getLastProjectId" resultType="int">
+        select SEQ_PK_PROJECTINFO.currval from dual
+    </select>
+
+</mapper>

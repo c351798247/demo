@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qf.menuinfo.mapper.MenuInfoMapper">
+    <resultMap id="menuDto" type="com.qf.menuinfo.dto.MenuInfoDto">
+        <id property="id" column="MENUID"/>
+        <result property="name" column="MENUNAME"/>
+        <result property="url" column="URL"/>
+        <result property="icon" column="ICON"/>
+        <result property="pid" column="superid"/>
+        <collection property="children" ofType="com.qf.menuinfo.dto.MenuInfoDto" column="{superid=menuid}"
+                    select="selectChild"/>
+    </resultMap>
+
+    <select id="selectAllMenuDto" resultMap="menuDto">
+        select * from menuinfo where superid = 0
+    </select>
+
+    <select id="selectChild" resultMap="menuDto">
+        select * from menuinfo where superid = #{superid}
+    </select>
+
+    <resultMap id="menuDto2" type="com.qf.menuinfo.dto.MenuInfoDto">
+        <id property="id" column="MENUID"/>
+        <result property="name" column="MENUNAME"/>
+        <result property="url" column="URL"/>
+        <result property="icon" column="ICON"/>
+        <result property="pid" column="superid"/>
+        <result property="checked" column="checked"/>
+        <collection property="children" ofType="com.qf.menuinfo.dto.MenuInfoDto" column="{superid=menuid,roleid=roleid}"
+                    select="selectChildById"/>
+    </resultMap>
+
+    <select id="selectMenuDtoById" resultMap="menuDto2" parameterType="int">
+        select mi.*,decode(rm.menuid,null,'false','true') checked ,#{roleid} roleid from menuinfo mi left join rolemenu
+        rm on rm.roleid=#{roleid} and mi.menuid=rm.menuid where superid=0
+    </select>
+
+    <select id="selectChildById" resultMap="menuDto2" parameterType="map">
+        select mi.*,decode(rm.menuid,null,'false','true') checked ,#{roleid} roleid from menuinfo mi left join rolemenu
+        rm on rm.roleid=${roleid} and mi.menuid=rm.menuid where superid=${superid}
+    </select>
+
+
+    <select id="selectAllMenu" resultType="menuinfo">
+        select * from menuinfo
+    </select>
+
+    <select id="selectMenuById" parameterType="int" resultType="menuinfo">
+        select * from menuinfo where menuid=#{menuId}
+    </select>
+
+    <delete id="deleteMenuById" parameterType="int">
+        delete from menuinfo where menuid=#{menuid}
+    </delete>
+
+    <update id="updateMenu" parameterType="menuinfo">
+        update menuinfo
+        <set>
+            <if test="menuName!=null and menuName!=''">
+                menuname=#{menuName}
+            </if>
+            <if test="url!=null and url!=''">
+                ,url=#{url}
+            </if>
+            <if test="superId>=0">
+                ,superid=#{superId}
+            </if>
+
+            <if test="icon!=null and icon!=''">
+                ,icon=#{icon}
+            </if>
+            where menuid=#{menuId}
+
+        </set>
+    </update>
+    <insert id="insertMenu" parameterType="menuinfo">
+        insert into menuinfo values (SEQ_PK_MENUINFO.nextval,#{menuName},#{url},#{superId},#{icon})
+    </insert>
+
+
+    <delete id="deleteRoleMenuTempById" parameterType="int">
+        delete
+        from rolemenu
+        where roleid = #{roleid}
+
+    </delete>
+
+    <insert id="insertRoleMenuTemp" parameterType="java.util.Map">
+        insert into rolemenu(rmid,roleid,menuid)
+        select SEQ_PK_ROLEMENU.NEXTVAL,#{roleid},cd.* from (
+        <foreach collection="menuArr" item="item" separator="union all">
+            select #{item} from dual
+        </foreach>
+        ) cd
+    </insert>
+
+    <select id="getMenuByUser" parameterType="int" resultType="menuinfo">
+        select * from menuinfo where menuid in (
+        select distinct menuid from rolemenu where roleid in
+        (select * from (select nvl(res.roleid,0) selected from roleinfo ri left join
+        (select ur.roleid from userinfo ui right join userrole ur on ui.userid = ur.userid where ui.userid=#{userid})
+        res on ri.roleid=res.roleid and state='ENABLE')
+        where selected >0
+        ))
+    </select>
+</mapper>

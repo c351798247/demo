@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qf.paraminfo.mapper.ParamInfoMapper">
+    <insert id="insertParamInfo" parameterType="paraminfo">
+        insert into paraminfo values (SEQ_PK_PARAMINFO.NEXTVAL,#{paramname},#{paramcode},#{paramvalue})
+    </insert>
+
+    <select id="queryParamInfo" parameterType="String" resultType="paraminfo">
+        select * from paraminfo
+        <where>
+            <if test="name != null and name != ''">
+                paramname like '%${name}%'
+            </if>
+        </where>
+        order by paramid
+    </select>
+
+    <update id="updateParamInfo" parameterType="paraminfo">
+        update paraminfo
+        <set>
+            <if test="paramname != null and paramname != ''">
+                paramname = #{paramname}
+            </if>
+            <if test="paramvalue != null and paramvalue != ''">
+                ,paramvalue = #{paramvalue}
+            </if>
+            <if test="paramcode != null and paramcode != ''">
+                ,paramcode = #{paramcode}
+            </if>
+        </set>
+        where paramid = #{paramid}
+    </update>
+</mapper>

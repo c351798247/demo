@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qf.roleinfo.mapper.RoleInfoMapper">
+    <select id="selectAllRole" resultType="roleinfo">
+        select * from roleinfo order by roleid
+    </select>
+
+    <select id="selectRoleById" parameterType="int" resultType="roleinfo">
+        select * from roleinfo where roleid=#{roleid}
+    </select>
+    <insert id="insertRole" parameterType="roleinfo">
+        insert into roleinfo values (seq_pk_roleinfo.nextval,#{rolename})
+    </insert>
+
+    <delete id="deleteRoleById" parameterType="int">
+        delete from roleinfo where roleid=#{roleid}
+    </delete>
+
+    <update id="updateRoleById" parameterType="roleinfo">
+        update roleinfo
+        <set>
+            <if test="rolename != null and rolename != ''">
+                rolename=#{rolename}
+            </if>
+            <if test="state != null and state != ''">
+                ,state=#{state}
+            </if>
+        </set>
+        where roleid=#{roleid}
+    </update>
+</mapper>

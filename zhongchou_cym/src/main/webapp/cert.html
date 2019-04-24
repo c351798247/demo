@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="GB18030" xmlns:v-for="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="GB18030">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/main.css">
+    <style>
+        .tree li {
+            list-style-type: none;
+            cursor: pointer;
+        }
+
+        table tbody tr:nth-child(odd) {
+            background: #F4F4F4;
+        }
+
+        table tbody td:nth-child(even) {
+            color: #C00;
+        }
+    </style>
+</head>
+
+<body>
+
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <div><a class="navbar-brand" style="font-size:32px;" href="#">众筹平台 - 资质管理</a></div>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li style="padding-top:8px;">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-default btn-success dropdown-toggle"
+                                data-toggle="dropdown">
+                            <i class="glyphicon glyphicon-user"></i> <font class="uname">张三 </font> <span
+                                class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="#"><i class="glyphicon glyphicon-cog"></i> 个人设置</a></li>
+                            <li><a href="#"><i class="glyphicon glyphicon-comment"></i> 消息</a></li>
+                            <li class="divider"></li>
+                            <li><a href="index.html"><i class="glyphicon glyphicon-off"></i> 退出系统</a></li>
+                        </ul>
+                    </div>
+                </li>
+                <li style="margin-left:10px;padding-top:8px;">
+                    <button type="button" class="btn btn-default btn-danger">
+                        <span class="glyphicon glyphicon-question-sign"></span> 帮助
+                    </button>
+                </li>
+            </ul>
+            <form class="navbar-form navbar-right">
+                <input type="text" class="form-control" placeholder="Search...">
+            </form>
+        </div>
+    </div>
+</nav>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-3 col-md-2 sidebar">
+            <div class="tree">
+                <ul style="padding-left:0px;" class="list-group">
+                    <li class="list-group-item tree-closed">
+                        <a href="main.html"><i class="glyphicon glyphicon-dashboard"></i> 控制面板</a>
+                    </li>
+                    <li class="list-group-item tree-closed">
+                        <span><i class="glyphicon glyphicon glyphicon-tasks"></i> 权限管理 <span class="badge"
+                                                                                             style="float:right">3</span></span>
+                        <ul style="margin-top:10px;display:none;">
+                            <li style="height:30px;">
+                                <a href="user.html"><i class="glyphicon glyphicon-user"></i> 用户维护</a>
+                            </li>
+                            <li style="height:30px;">
+                                <a href="role.html"><i class="glyphicon glyphicon-king"></i> 角色维护</a>
+                            </li>
+                            <li style="height:30px;">
+                                <a href="permission.html"><i class="glyphicon glyphicon-lock"></i> 许可维护</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="list-group-item tree-closed">
+                        <span><i class="glyphicon glyphicon-ok"></i> 业务审核 <span class="badge"
+                                                                                style="float:right">3</span></span>
+                        <ul style="margin-top:10px;display:none;">
+                            <li style="height:30px;">
+                                <a href="auth_cert.html"><i class="glyphicon glyphicon-check"></i> 实名认证审核</a>
+                            </li>
+                            <li style="height:30px;">
+                                <a href="auth_adv.html"><i class="glyphicon glyphicon-check"></i> 广告审核</a>
+                            </li>
+                            <li style="height:30px;">
+                                <a href="auth_project.html"><i class="glyphicon glyphicon-check"></i> 项目审核</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="list-group-item">
+                        <span><i class="glyphicon glyphicon-th-large"></i> 业务管理 <span class="badge" style="float:right">7</span></span>
+                        <ul style="margin-top:10px;">
+
+                        </ul>
+                    </li>
+                    <li class="list-group-item tree-closed">
+                        <a href="param.html"><i class="glyphicon glyphicon-list-alt"></i> 参数管理</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><i class="glyphicon glyphicon-th"></i> 数据列表</h3>
+                </div>
+                <div class="panel-body">
+                    <form class="form-inline" role="form" style="float:left;">
+                        <div class="form-group has-feedback">
+                            <div class="input-group">
+                                <div class="input-group-addon">查询条件</div>
+                                <input name="searchQname" class="form-control has-success" type="text"
+                                       placeholder="请输入查询条件">
+                            </div>
+                        </div>
+                        <button id="btn-search" type="button" class="btn btn-warning"><i
+                                class="glyphicon glyphicon-search"></i> 查询
+                        </button>
+                    </form>
+                    <button type="button" class="btn btn-danger" style="float:right;margin-left:10px;"><i
+                            class=" glyphicon glyphicon-remove"></i> 删除
+                    </button>
+                    <button id="btn-add" type="button" class="btn btn-primary" style="float:right;"><i
+                            class="glyphicon glyphicon-plus"></i> 新增
+                    </button>
+                    <br>
+                    <hr style="clear:both;">
+                    <div class="table-responsive">
+                        <table class="table  table-bordered">
+                            <thead>
+                            <tr>
+                                <th width="30">#</th>
+                                <th width="30"><input type="checkbox"></th>
+                                <th>名称</th>
+                                <th width="100">操作</th>
+                            </tr>
+                            </thead>
+                            <tbody id="tbody">
+                            <tr v-for="c in cert">
+                                <td>{{c.qid}}</td>
+                                <td><input type="checkbox"></td>
+                                <td>{{c.qname}}</td>
+                                <td>
+
+                                    <button @click="update(c)" type="button" class="btn btn-primary btn-xs"><i
+                                            class=" glyphicon glyphicon-pencil"></i></button>
+                                    <button type="button" class="btn btn-danger btn-xs"><i
+                                            class=" glyphicon glyphicon-remove"></i></button>
+                                </td>
+                            </tr>
+                            <!--<tr>-->
+                            <!--<td>2</td>-->
+                            <!--<td><input type="checkbox"></td>-->
+                            <!--<td>税务登记证</td>-->
+                            <!--<td>-->
+                            <!---->
+                            <!--<button type="button" class="btn btn-primary btn-xs"><i class=" glyphicon glyphicon-pencil"></i></button>-->
+                            <!--<button type="button" class="btn btn-danger btn-xs"><i class=" glyphicon glyphicon-remove"></i></button>-->
+                            <!--</td>-->
+                            <!--</tr>-->
+                            <!--<tr>-->
+                            <!--<td>3</td>-->
+                            <!--<td><input type="checkbox"></td>-->
+                            <!--<td>组织机构代码证</td>-->
+                            <!--<td>-->
+                            <!---->
+                            <!--<button type="button" class="btn btn-primary btn-xs"><i class=" glyphicon glyphicon-pencil"></i></button>-->
+                            <!--<button type="button" class="btn btn-danger btn-xs"><i class=" glyphicon glyphicon-remove"></i></button>-->
+                            <!--</td>-->
+                            <!--</tr>-->
+                            <!--<tr>-->
+                            <!--<td>4</td>-->
+                            <!--<td><input type="checkbox"></td>-->
+                            <!--<td>单位登记证件 </td>-->
+                            <!--<td>-->
+                            <!---->
+                            <!--<button type="button" class="btn btn-primary btn-xs"><i class=" glyphicon glyphicon-pencil"></i></button>-->
+                            <!--<button type="button" class="btn btn-danger btn-xs"><i class=" glyphicon glyphicon-remove"></i></button>-->
+                            <!--</td>-->
+                            <!--</tr>-->
+                            <!--<tr>-->
+                            <!--<td>5</td>-->
+                            <!--<td><input type="checkbox"></td>-->
+                            <!--<td>法定代表人证件</td>-->
+                            <!--<td>-->
+                            <!---->
+                            <!--<button type="button" class="btn btn-primary btn-xs"><i class=" glyphicon glyphicon-pencil"></i></button>-->
+                            <!--<button type="button" class="btn btn-danger btn-xs"><i class=" glyphicon glyphicon-remove"></i></button>-->
+                            <!--</td>-->
+                            <!--</tr>-->
+                            <!--<tr>-->
+                            <!--<td>6</td>-->
+                            <!--<td><input type="checkbox"></td>-->
+                            <!--<td>经营者证件 </td>-->
+                            <!--<td>-->
+                            <!---->
+                            <!--<button type="button" class="btn btn-primary btn-xs"><i class=" glyphicon glyphicon-pencil"></i></button>-->
+                            <!--<button type="button" class="btn btn-danger btn-xs"><i class=" glyphicon glyphicon-remove"></i></button>-->
+                            <!--</td>-->
+                            <!--</tr>-->
+                            <!--<tr>-->
+                            <!--<td>7</td>-->
+                            <!--<td><input type="checkbox"></td>-->
+                            <!--<td>手执身份证照片</td>-->
+                            <!--<td>-->
+                            <!---->
+                            <!--<button type="button" class="btn btn-primary btn-xs"><i class=" glyphicon glyphicon-pencil"></i></button>-->
+                            <!--<button type="button" class="btn btn-danger btn-xs"><i class=" glyphicon glyphicon-remove"></i></button>-->
+                            <!--</td>-->
+                            <!--</tr>-->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="jquery/jquery-2.1.1.min.js"></script>
+<script src="bootstrap/js/bootstrap.min.js"></script>
+<script src="script/docs.min.js"></script>
+<script src="vue/vue-2.2.2.min.js"></script>
+<script src="vue/vue-resource.min.js"></script>
+<script src="jquery/jsSession.js"></script>
+<script type="text/javascript">
+    $(function () {
+        $.ajax({
+            url: "getMenuByUser",
+            async: false,
+            success: function (res) {
+                console.log(res);
+                var second = [];
+                var thrid = [];
+                for (var index in res) {
+                    if (res[index].superId == 1) {
+                        second.push(res[index]);
+                        res[index].children = [];
+                    } else if (res[index].superId != 0 && res[index].superId != 1) {
+                        thrid.push(res[index]);
+                    }
+                }
+                for (var tIndex in thrid) {
+                    for (var sIndex in second) {
+                        if (thrid[tIndex].superId == second[sIndex].menuId) {
+                            second[sIndex].children.push(thrid[tIndex]);
+                            break;
+                        }
+                    }
+                }
+                $(".list-group").empty();
+                for (var out in second) {
+                    if (second[out].children.length == 0) {
+                        $(".list-group").append("<li class=\"list-group-item tree-closed\" >" +
+                            "<a href=\"" + second[out].url + "\"><i class=\"" + second[out].icon + "\"></i> " + second[out].menuName + "</a>" +
+                            "</li>");
+                    } else {
+                        var ch = second[out].children;
+
+                        var str = "<li class=\"list-group-item tree-closed\">\n" +
+                            "\t<span><i class=\"" + second[out].icon + "\"></i> " + second[out].menuName + " <span class=\"badge\" style=\"float:right\">" + ch.length + "</span></span>\n" +
+                            "\t<ul style=\"margin-top:10px;display:none;\">"
+                        for (var index in ch) {
+                            str += "<li style=\"height:30px;\">\n" +
+                                "\t\t\t<a href=\"" + ch[index].url + "\"><i class=\"" + ch[index].icon + "\"></i>" + ch[index].menuName + "</a>\n" +
+                                "\t\t</li>"
+                        }
+                        str += "</ul></li>";
+                        $(".list-group").append(str);
+                    }
+                }
+
+            },
+            error: function () {
+                alert("请求失败");
+            }
+        });
+        $(".list-group-item").click(function () {
+            if ($(this).find("ul")) {
+                $(this).toggleClass("tree-closed");
+                if ($(this).hasClass("tree-closed")) {
+                    $("ul", this).hide("fast");
+                } else {
+                    $("ul", this).show("fast");
+                }
+            }
+        });
+    });
+
+    vueObj = new Vue({
+        el: "#tbody",
+        data: {
+            cert: []
+        },
+        created: function () {
+            this.$http.post("getQualification").then(function (value) {
+                this.cert = value.body;
+            });
+        },
+        methods: {
+            update: function (c) {
+                console.log(c);
+                var newName = prompt(c.qname + "更改为?");
+                if (newName != null) {
+                    newName = newName.trim();
+                    if (newName.length > 0) {
+                        c.qname = newName;
+                        this.$http.post("updateQualification", c).then(function (value) {
+                            console.log("success");
+                        });
+                    }
+                }
+            },
+            getQua: function (search) {
+                if (search == null) {
+                    this.$http.post("getQualification").then(function (value) {
+                        this.cert = value.body;
+                    });
+                } else {
+                    this.$http.post("getQualification", {search: search}, {emulateJSON: true}).then(function (value) {
+                        this.cert = value.body;
+                    });
+                }
+            }
+        }
+    });
+
+    $("#btn-add").click(function () {
+        var obj = {qid: 0};
+        var newName = prompt("输入新的证件名称");
+        if (newName != null) {
+            newName = newName.trim();
+            if (newName.length > 0) {
+                obj.qname = newName;
+                $.ajax({
+                    url: "addQualification",
+                    data: JSON.stringify(obj),
+                    type: "POST",
+                    contentType: "application/json;UTF-8",
+                    success: function (res) {
+                        console.log("添加成功");
+                        vueObj.getQua();
+                    },
+                    error: function () {
+                        alert("添加失败")
+                    }
+                });
+            }
+        }
+    });
+
+    $("#btn-search").click(function () {
+        var search = $("input[name='searchQname']").val();
+        search = search.trim();
+        vueObj.getQua(search);
+    });
+    var seobj = $.session.get("uname");
+    var trans = eval("(" + seobj + ")");
+    $(".uname").html(trans.uname);
+</script>
+</body>
+</html>

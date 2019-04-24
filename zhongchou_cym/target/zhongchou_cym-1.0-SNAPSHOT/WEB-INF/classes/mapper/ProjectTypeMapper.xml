@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qf.projcttype.mapper.ProjectTypeMapper">
+    <insert id="insertProjectType" parameterType="projectType">
+        insert into projecttype values (SEQ_PK_PROJECTTYPE.NEXTVAL,#{ptname},#{introduction})
+    </insert>
+
+    <select id="queryProjectType" parameterType="String" resultType="projectType">
+        select * from projecttype
+        <where>
+            <if test="ptname != null and ptname !=''">
+                ptname like '%${ptname}%'
+            </if>
+        </where>
+        order by ptid
+    </select>
+
+    <update id="updateProjectType" parameterType="projectType">
+        update projecttype
+        <set>
+            <if test="ptname != null and ptname != ''">
+                ptname=#{ptname}
+            </if>
+            <if test="introduction != null and introduction != ''">
+                ,introduction=#{introduction}
+            </if>
+        </set>
+        where ptid = #{ptid}
+    </update>
+</mapper>

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qf.userinfo.mapper.UserInfoMapper">
+
+    <select id="getAllUser" parameterType="String" resultType="userinfo">
+        select * from userinfo
+        <if test="name!=null and name !=''">
+            where uname like '%${name }%'
+        </if>
+        order by userid
+    </select>
+
+
+    <select id="getUserById" parameterType="int" resultType="userinfo">
+        select * from userinfo where userid=#{id}
+    </select>
+
+    <insert id="insertUser" parameterType="userinfo">
+        insert into userinfo values (seq_userid.nextval,#{uname},#{upass},#{realname},#{email},#{state})
+    </insert>
+
+    <delete id="deleteUserById" parameterType="int">
+        delete from userinfo where userid=#{userid}
+    </delete>
+
+    <update id="updateUser" parameterType="userinfo">
+        update userinfo
+        <set>
+            <if test="uname != null and uname != ''">
+                uname=#{uname} ,
+            </if>
+            <if test="upass != null and upass != ''">
+                upass=#{upass},
+            </if>
+            <if test="realname != null and realname != ''">
+                realname=#{realname},
+            </if>
+            <if test="email != null and email != ''">
+                email=#{email},
+            </if>
+            <if test="state !=null and state !=''">
+                state=#{state}
+            </if>
+        </set>
+        where userid = #{userid}
+    </update>
+
+    <select id="selectUserInfoBySearch" parameterType="String" resultType="userinfo">
+        select * from userinfo
+        <where>
+            <if test="search != null and search !=''">
+                uname like '%${search }%' or realname like '%${search }%' or email like '%${search }%'
+            </if>
+        </where>
+        order by userid
+    </select>
+
+    <select id="selectUserInfoBy" parameterType="userinfo" resultType="userinfo">
+        select * from userinfo
+        <where>
+            <if test="uname != null and uname !=''">
+                and uname=#{uname}
+            </if>
+            <if test="upass != null and upass !=''">
+                and upass=#{upass}
+            </if>
+            <if test="realname != null and realname!=''">
+                and realname=#{realname}
+            </if>
+            <if test="email != null and email !=''">
+                and email=#{email}
+            </if>
+        </where>
+    </select>
+
+    <select id="getMyRole" resultType="com.qf.roleinfo.dto.RoleInfoDto" parameterType="int">
+        select ri.*, nvl(res.roleid,0) selected from roleinfo ri left join (select ur.roleid from userinfo ui right join
+        userrole ur on ui.userid = ur.userid where ui.userid=#{userid}) res on ri.roleid=res.roleid
+    </select>
+
+    <delete id="deleteUserRoleByUserId" parameterType="int">
+        delete from userrole where userid=#{userid}
+    </delete>
+
+    <insert id="insertUserRoleTemp" parameterType="com.qf.userinfo.vo.UserRoleVo">
+        insert into userrole(urid,userid,roleid)
+        select SEQ_PK_USERROLE.NEXTVAL,#{userid},cd.* from (
+        <foreach collection="roles" item="item" separator="union all">
+            select #{item} from dual
+        </foreach>
+        ) cd
+    </insert>
+</mapper>

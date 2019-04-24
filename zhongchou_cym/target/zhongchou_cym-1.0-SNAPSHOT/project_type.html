@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="GB18030">
+<head>
+    <meta charset="GB18030">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/main.css">
+    <style>
+        .tree li {
+            list-style-type: none;
+            cursor: pointer;
+        }
+
+        table tbody tr:nth-child(odd) {
+            background: #F4F4F4;
+        }
+
+        table tbody td:nth-child(even) {
+            color: #C00;
+        }
+    </style>
+</head>
+
+<body>
+
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <div><a class="navbar-brand" style="font-size:32px;" href="#">众筹平台 - 项目分类</a></div>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li style="padding-top:8px;">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-default btn-success dropdown-toggle"
+                                data-toggle="dropdown">
+                            <i class="glyphicon glyphicon-user"></i> <font class="uname">张三</font> <span
+                                class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="#"><i class="glyphicon glyphicon-cog"></i> 个人设置</a></li>
+                            <li><a href="#"><i class="glyphicon glyphicon-comment"></i> 消息</a></li>
+                            <li class="divider"></li>
+                            <li><a href="index.html"><i class="glyphicon glyphicon-off"></i> 退出系统</a></li>
+                        </ul>
+                    </div>
+                </li>
+                <li style="margin-left:10px;padding-top:8px;">
+                    <button type="button" class="btn btn-default btn-danger">
+                        <span class="glyphicon glyphicon-question-sign"></span> 帮助
+                    </button>
+                </li>
+            </ul>
+            <form class="navbar-form navbar-right">
+                <input type="text" class="form-control" placeholder="Search...">
+            </form>
+        </div>
+    </div>
+</nav>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-3 col-md-2 sidebar">
+            <div class="tree">
+                <ul style="padding-left:0px;" class="list-group">
+
+                </ul>
+            </div>
+        </div>
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><i class="glyphicon glyphicon-th"></i> 数据列表</h3>
+                </div>
+                <div class="panel-body">
+                    <form class="form-inline" role="form" style="float:left;">
+                        <div class="form-group has-feedback">
+                            <div class="input-group">
+                                <div class="input-group-addon">查询条件</div>
+                                <input name="searchPT" class="form-control has-success" type="text"
+                                       placeholder="请输入查询条件">
+                            </div>
+                        </div>
+                        <button id="btn-search" type="button" class="btn btn-warning"><i
+                                class="glyphicon glyphicon-search"></i> 查询
+                        </button>
+                    </form>
+                    <button type="button" class="btn btn-danger" style="float:right;margin-left:10px;"><i
+                            class=" glyphicon glyphicon-remove"></i> 删除
+                    </button>
+                    <button type="button" class="btn btn-primary" style="float:right;" data-toggle="modal"
+                            data-target="#addModal"><i class="glyphicon glyphicon-plus"></i> 新增
+                    </button>
+                    <br>
+                    <hr style="clear:both;">
+                    <div class="table-responsive">
+                        <table class="table  table-bordered">
+                            <thead>
+                            <tr>
+                                <th width="30">#</th>
+                                <th width="30"><input type="checkbox"></th>
+                                <th width="300">分类名称</th>
+                                <th>简介</th>
+                                <th width="100">操作</th>
+                            </tr>
+                            </thead>
+                            <tbody id="tbody">
+                            <tr v-for="t in types">
+                                <td>{{t.ptid}}</td>
+                                <td><input type="checkbox"></td>
+                                <td>{{t.ptname}}</td>
+                                <td>{{t.introduction}}</td>
+                                <td>
+                                    <button @click="update(t)" type="button" class="btn btn-primary btn-xs"
+                                            data-toggle="modal" data-target="#updateModal"><i
+                                            class=" glyphicon glyphicon-pencil"></i></button>
+                                    <button type="button" class="btn btn-danger btn-xs"><i
+                                            class=" glyphicon glyphicon-remove"></i></button>
+                                </td>
+                            </tr>
+
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--添加分类-->
+<div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="addModalLabel">添加一个分类</h4>
+            </div>
+            <div class="modal-body">
+
+                <div class="input-group">
+                    <span class="input-group-addon" id="basic-addon1">分类名称</span>
+                    <input name="typeName" type="text" class="form-control" aria-describedby="basic-addon1">
+                </div>
+                <div class="input-group">
+                    <span class="input-group-addon" id="basic-addon2">简介</span>
+                    <input name="introduction" type="text" class="form-control" aria-describedby="basic-addon1">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button id="btn-add" type="button" class="btn btn-primary" data-dismiss="modal">提交更改</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+
+<!--更新分类信息-->
+<div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="updateModalLabel">更新一个分类</h4>
+            </div>
+            <div class="modal-body">
+                <div class="input-group">
+                    <span class="input-group-addon" id="basic-addon3">分类名称</span>
+                    <input name="newTypeName" type="text" class="form-control" aria-describedby="basic-addon1">
+                </div>
+                <div class="input-group">
+                    <span class="input-group-addon" id="basic-addon4">简介</span>
+                    <input name="newIntroduction" type="text" class="form-control" aria-describedby="basic-addon1">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button id="btn-update" type="button" class="btn btn-primary" data-dismiss="modal">提交更改</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+
+<script src="jquery/jquery-2.1.1.min.js"></script>
+<script src="bootstrap/js/bootstrap.min.js"></script>
+<script src="script/docs.min.js"></script>
+<script src="vue/vue-2.2.2.min.js"></script>
+<script src="vue/vue-resource.min.js"></script>
+<script src="jquery/jsSession.js"></script>
+<script type="text/javascript">
+    $(function () {
+        $.ajax({
+            url: "getMenuByUser",
+            async: false,
+            success: function (res) {
+                console.log(res);
+                var second = [];
+                var thrid = [];
+                for (var index in res) {
+                    if (res[index].superId == 1) {
+                        second.push(res[index]);
+                        res[index].children = [];
+                    } else if (res[index].superId != 0 && res[index].superId != 1) {
+                        thrid.push(res[index]);
+                    }
+                }
+                for (var tIndex in thrid) {
+                    for (var sIndex in second) {
+                        if (thrid[tIndex].superId == second[sIndex].menuId) {
+                            second[sIndex].children.push(thrid[tIndex]);
+                            break;
+                        }
+                    }
+                }
+                $(".list-group").empty();
+                for (var out in second) {
+                    if (second[out].children.length == 0) {
+                        $(".list-group").append("<li class=\"list-group-item tree-closed\" >" +
+                            "<a href=\"" + second[out].url + "\"><i class=\"" + second[out].icon + "\"></i> " + second[out].menuName + "</a>" +
+                            "</li>");
+                    } else {
+                        var ch = second[out].children;
+
+                        var str = "<li class=\"list-group-item tree-closed\">\n" +
+                            "\t<span><i class=\"" + second[out].icon + "\"></i> " + second[out].menuName + " <span class=\"badge\" style=\"float:right\">" + ch.length + "</span></span>\n" +
+                            "\t<ul style=\"margin-top:10px;display:none;\">"
+                        for (var index in ch) {
+                            str += "<li style=\"height:30px;\">\n" +
+                                "\t\t\t<a href=\"" + ch[index].url + "\"><i class=\"" + ch[index].icon + "\"></i>" + ch[index].menuName + "</a>\n" +
+                                "\t\t</li>"
+                        }
+                        str += "</ul></li>";
+                        $(".list-group").append(str);
+                    }
+                }
+
+            },
+            error: function () {
+                alert("请求失败");
+            }
+        });
+        $(".list-group-item").click(function () {
+            if ($(this).find("ul")) {
+                $(this).toggleClass("tree-closed");
+                if ($(this).hasClass("tree-closed")) {
+                    $("ul", this).hide("fast");
+                } else {
+                    $("ul", this).show("fast");
+                }
+            }
+        });
+    });
+
+    var vueObj = new Vue({
+        el: "#tbody",
+        data: {
+            types: []
+        },
+        created: function () {
+            this.$http.post("getAllProjectType").then(function (value) {
+                console.log(value.body);
+                this.types = value.body;
+            });
+        },
+        methods: {
+            update: function (t) {
+                $("input[name='newTypeName']").val(t.ptname)
+                $("input[name='newIntroduction']").val(t.introduction);
+                $("#btn-update").click(function () {
+                    var newTyep = $("input[name='newTypeName']").val();
+                    var newIntr = $("input[name='newIntroduction']").val();
+                    t.ptname = newTyep;
+                    t.introduction = newIntr;
+                    $.ajax({
+                        url: "updateProjectType",
+                        data: JSON.stringify(t),
+                        type: "POST",
+                        contentType: "application/json;UTF-8",
+                        success: function (res) {
+                            console.log("success");
+
+                        },
+                        error: function () {
+                            alert("更新失败");
+                        }
+                    });
+                });
+            },
+            getall: function () {
+                this.$http.post("getAllProjectType").then(function (value) {
+                    console.log(value.body);
+                    this.types = value.body;
+                });
+            }
+        }
+    });
+
+    $("#btn-add").click(function () {
+        var typeName = $("input[name='typeName']").val();
+        var introduction = $("input[name='introduction']").val();
+        var obj = JSON.stringify({ptname: typeName, introduction: introduction});
+        $.ajax({
+            url: "addProjectType",
+            data: obj,
+            type: "POST",
+            contentType: "application/json;UTF-8",
+            success: function (re) {
+                vueObj.getall();
+            }
+        });
+    });
+
+    $("#btn-search").click(function () {
+        var search = $("input[name='searchPT']").val().trim();
+
+        $.ajax({
+            url: "getAllProjectType",
+            data: {search: search},
+            type: "POST",
+            success: function (res) {
+                console.log("查询项目分类成功");
+                vueObj.types = res;
+            },
+            error: function () {
+                alert("查询项目分类失败");
+            }
+        });
+
+    });
+    var seobj = $.session.get("uname");
+    var trans = eval("(" + seobj + ")");
+    $(".uname").html(trans.uname);
+</script>
+</body>
+</html>
